@@ -1,0 +1,6 @@
+syntax = "proto3";
+option java_package = "com.zkn.core.message";
+message ImMessage {
+string type = 1;
+string payload = 3;
+}
