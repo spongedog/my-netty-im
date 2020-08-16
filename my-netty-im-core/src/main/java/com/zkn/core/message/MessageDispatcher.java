@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 /**
+ * 消息分发器
  * @author 郑凯努
  * @version 1.0
  * @date 2020/8/14
@@ -16,17 +17,19 @@ import java.util.concurrent.ExecutorService;
 @RequiredArgsConstructor
 public class MessageDispatcher extends SimpleChannelInboundHandler<ImMessageOuterClass.ImMessage> {
 
-    private final Map<String, MessageHandler<?>> messageHandlerMap;
+    private final Map<String, MessageHandler> messageHandlerMap;
 
     private final ExecutorService executorService;
 
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void channelRead0(ChannelHandlerContext ctx, ImMessageOuterClass.ImMessage msg) throws Exception {
-        MessageHandler messageHandler = messageHandlerMap.get(msg.getType());
+        MessageHandler<Object> messageHandler = messageHandlerMap.get(msg.getType());
 
         Object payload = objectMapper.readValue(msg.getPayload(), messageHandler.messageClass());
         executorService.submit(() -> messageHandler.hand(ctx.channel(), payload));
     }
+
 }
