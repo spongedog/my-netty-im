@@ -29,12 +29,12 @@ public class NettyServerBootstrap {
     /**
      * 接收客户端连接
      */
-    private EventLoopGroup bossGroup = new NioEventLoopGroup();
+    private final EventLoopGroup bossGroup = new NioEventLoopGroup();
 
     /**
      * 接收客户端读写
      */
-    private EventLoopGroup workerGroup = new NioEventLoopGroup();
+    private final EventLoopGroup workerGroup = new NioEventLoopGroup();
 
     private final MessageDispatcher messageDispatcher;
 

@@ -1,5 +1,6 @@
-package com.zkn.server.channel;
+package com.zkn.server.handler;
 
+import com.zkn.server.channel.NettyChannelHolder;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;
@@ -34,11 +35,8 @@ public class HeartBeatHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        channelHolder.removeChannel(ctx.channel().id());
         ctx.close();
     }
 
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-
-    }
 }

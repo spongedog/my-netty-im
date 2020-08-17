@@ -3,22 +3,26 @@ package com.zkn.server.channel;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelId;
 import io.netty.util.AttributeKey;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 管理用户的 {@link Channel}
  * @author 郑凯努
  * @version 1.0
  * @date 2020/8/16
  */
 @Component
+@Slf4j
 public class NettyChannelHolder {
 
-    private Map<String, Channel> userChannelMap = new ConcurrentHashMap<String, Channel>();
+    private final Map<String, Channel> userChannelMap = new ConcurrentHashMap<>();
 
-    private Map<ChannelId, Channel> channelIdMap = new ConcurrentHashMap<>();
+    private final Map<ChannelId, Channel> channelIdMap = new ConcurrentHashMap<>();
 
     private static final AttributeKey<String> USER_ID = AttributeKey.newInstance("user_id");
 
@@ -29,9 +33,15 @@ public class NettyChannelHolder {
     }
 
     public void removeChannel(ChannelId channelId) {
-        Channel channel = channelIdMap.remove(channelId);
-        if (channel != null) {
-            userChannelMap.remove(channel.attr(USER_ID));
-        }
+        Optional.ofNullable(channelIdMap.remove(channelId))
+                .filter(channel -> channel.hasAttr(USER_ID))
+                .ifPresent(channel ->  userChannelMap.remove(channel.attr(USER_ID).get()));
+    }
+
+    public void sendToUser(String userId, Object message) {
+        Optional.ofNullable(userChannelMap.get(userId))
+                .filter(Channel::isActive)
+                .ifPresentOrElse(channel -> channel.writeAndFlush(message),
+                        () -> log.info("channel not active"));
     }
 }

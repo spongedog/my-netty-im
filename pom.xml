@@ -11,12 +11,15 @@
 
     <properties>
         <spring.boot.version>2.3.3.RELEASE</spring.boot.version>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
+        <netty.verison>4.1.50.Final</netty.verison>
+        <protobuf.version>4.0.0-rc-2</protobuf.version>
+        <maven.compiler.target>14</maven.compiler.target>
+        <maven.compiler.source>14</maven.compiler.source>
     </properties>
     <modules>
         <module>my-netty-im-core</module>
         <module>my-netty-im-server</module>
+        <module>my-netty-im-client</module>
     </modules>
 
     <dependencyManagement>
@@ -27,6 +30,18 @@
                 <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.verison}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
