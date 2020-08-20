@@ -11,5 +11,19 @@ public enum MessageTypeEnum {
     /**
      * 请求消息
      */
-    REQUEST
+    REQUEST,
+
+    /**
+     * 响应消息
+     */
+    RESPONSE,
+
+    /**
+     * 心跳
+     */
+    HEARTBEAT,
+    /**
+     * 授权消息
+     */
+    AUTH;
 }

@@ -1,11 +1,16 @@
 package com.zkn.core.message;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zkn.core.exception.BaseException;
+import com.zkn.core.util.JsonUtil;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -15,21 +20,30 @@ import java.util.concurrent.ExecutorService;
  * @date 2020/8/14
  */
 @RequiredArgsConstructor
-public class MessageDispatcher extends SimpleChannelInboundHandler<ImMessageOuterClass.ImMessage> {
+@ChannelHandler.Sharable
+@Slf4j
+public class MessageDispatcher extends SimpleChannelInboundHandler<MessageOuter.ImMessage> {
 
     private final Map<String, MessageHandler> messageHandlerMap;
 
     private final ExecutorService executorService;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     @Override
-    @SuppressWarnings("unchecked")
-    protected void channelRead0(ChannelHandlerContext ctx, ImMessageOuterClass.ImMessage msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, MessageOuter.ImMessage msg) throws Exception {
         MessageHandler<Object> messageHandler = messageHandlerMap.get(msg.getType());
 
-        Object payload = objectMapper.readValue(msg.getPayload(), messageHandler.messageClass());
-        executorService.submit(() -> messageHandler.hand(ctx.channel(), payload));
+        if (messageHandler == null) {
+            log.error("not legal type {}", msg.getType());
+        }
+
+
+        Object payload = JsonUtil.readValue(msg.getPayload(), messageHandler.messageClass());
+
+        CompletableFuture.runAsync(() -> messageHandler.hand(ctx.channel(), payload), executorService)
+                .exceptionallyAsync(e -> {
+                    ctx.fireExceptionCaught(e);
+                    return null;
+                });
     }
 
 }

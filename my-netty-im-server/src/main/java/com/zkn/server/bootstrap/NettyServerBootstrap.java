@@ -10,6 +10,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -38,7 +39,8 @@ public class NettyServerBootstrap {
 
     private final MessageDispatcher messageDispatcher;
 
-    private int port = 8999;
+    @Value("${netty.server.port}")
+    private int port;
 
     @PostConstruct
     public void init() throws InterruptedException {

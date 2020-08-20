@@ -1,5 +1,6 @@
 package com.zkn.server.channel;
 
+import com.zkn.core.message.MessageOuter;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelId;
 import io.netty.util.AttributeKey;
@@ -28,20 +29,24 @@ public class NettyChannelHolder {
 
     public void saveChannel(String userId, Channel channel) {
         channel.attr(USER_ID).set(userId);
-        channelIdMap.put(channel.id(), channel);
         userChannelMap.put(userId, channel);
     }
 
+    public void saveChannel(Channel channel) {
+        channelIdMap.put(channel.id(), channel);
+    }
+
     public void removeChannel(ChannelId channelId) {
+        log.info("remove channel {}", channelId);
         Optional.ofNullable(channelIdMap.remove(channelId))
                 .filter(channel -> channel.hasAttr(USER_ID))
                 .ifPresent(channel ->  userChannelMap.remove(channel.attr(USER_ID).get()));
     }
 
-    public void sendToUser(String userId, Object message) {
+    public void sendToUser(String userId, MessageOuter.ImMessage message) {
         Optional.ofNullable(userChannelMap.get(userId))
                 .filter(Channel::isActive)
                 .ifPresentOrElse(channel -> channel.writeAndFlush(message),
-                        () -> log.info("channel not active"));
+                        () -> log.info("com.zkn.client.channel not active"));
     }
 }

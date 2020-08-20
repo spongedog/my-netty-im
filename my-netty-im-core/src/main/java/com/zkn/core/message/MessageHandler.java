@@ -12,7 +12,7 @@ public interface MessageHandler<T> {
 
     /**
      * 处理消息
-     * @param channel netty channel
+     * @param channel netty com.zkn.client.channel
      * @param message 消息实体
      */
     void hand(Channel channel, T message);

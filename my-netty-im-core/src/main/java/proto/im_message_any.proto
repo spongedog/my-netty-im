@@ -1,0 +1,8 @@
+syntax = "proto3";
+import "google/protobuf/any.proto";
+option java_package = "com.zkn.core.message";
+option java_outer_classname = "MessageOuter";
+message ImMessage {
+string type = 1;
+google.protobuf.Any payload = 2;
+}

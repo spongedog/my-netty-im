@@ -9,16 +9,26 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
- * 心跳handler
+ * 通道状态handler
  * @author 郑凯努
  * @version 1.0
  * @date 2020/8/16
  */
 @Component
 @RequiredArgsConstructor
-public class HeartBeatHandler extends ChannelInboundHandlerAdapter {
+public class ChannelStatusHandler extends ChannelInboundHandlerAdapter {
 
     private final NettyChannelHolder channelHolder;
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        channelHolder.saveChannel(ctx.channel());
+    }
+
+    @Override
+    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+        channelHolder.removeChannel(ctx.channel().id());
+    }
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
