@@ -20,7 +20,7 @@ public interface MessageHandler<T> {
     /**
      * @return 返回处理器支持的消息类型
      */
-    String supportType();
+    MessageOuter.ImMessage.MessageType supportType();
 
     /**
      * @return 返回处理器支持的消息类型

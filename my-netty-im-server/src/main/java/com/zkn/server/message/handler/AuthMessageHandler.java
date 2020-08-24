@@ -1,11 +1,9 @@
 package com.zkn.server.message.handler;
 
-import com.zkn.core.enums.MessageTypeEnum;
 import com.zkn.core.message.MessageHandler;
 import com.zkn.core.message.MessageOuter;
 import com.zkn.core.util.JsonUtil;
 import com.zkn.server.channel.NettyChannelHolder;
-import com.zkn.server.exception.ServerException;
 import com.zkn.server.message.ClientAuthMessage;
 import com.zkn.server.message.ServerResponse;
 import com.zkn.server.repository.UserDao;
@@ -39,8 +37,8 @@ public class AuthMessageHandler implements MessageHandler<ClientAuthMessage> {
     }
 
     @Override
-    public String supportType() {
-        return MessageTypeEnum.AUTH.name();
+    public MessageOuter.ImMessage.MessageType supportType() {
+        return MessageOuter.ImMessage.MessageType.AUTH;
     }
 
     @Override
@@ -50,7 +48,7 @@ public class AuthMessageHandler implements MessageHandler<ClientAuthMessage> {
 
     private void sendResponse(String status, String userId, Channel channel) {
         MessageOuter.ImMessage imMessage = MessageOuter.ImMessage.newBuilder()
-                .setType(MessageTypeEnum.RESPONSE.name())
+                .setType(MessageOuter.ImMessage.MessageType.RESPONSE)
                 .setPayload(JsonUtil.transToString(new ServerResponse(status, userId)))
                 .build();
         channel.writeAndFlush(imMessage);

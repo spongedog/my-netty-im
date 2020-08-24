@@ -1,8 +1,8 @@
 package com.zkn.client.message.handler;
 
 import com.zkn.client.message.UserMessage;
-import com.zkn.core.enums.MessageTypeEnum;
 import com.zkn.core.message.MessageHandler;
+import com.zkn.core.message.MessageOuter;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,8 +23,8 @@ public class UserMessageHandler implements MessageHandler<UserMessage> {
     }
 
     @Override
-    public String supportType() {
-        return MessageTypeEnum.REQUEST.name();
+    public MessageOuter.ImMessage.MessageType supportType() {
+        return MessageOuter.ImMessage.MessageType.REQUEST;
     }
 
     @Override

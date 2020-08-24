@@ -1,11 +1,9 @@
 package com.zkn.server.message.handler;
 
-import com.zkn.core.enums.MessageTypeEnum;
 import com.zkn.core.message.MessageHandler;
 import com.zkn.core.message.MessageOuter;
 import com.zkn.core.util.JsonUtil;
 import com.zkn.server.channel.NettyChannelHolder;
-import com.zkn.server.exception.ServerException;
 import com.zkn.server.message.ClientRequestMessage;
 import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
@@ -29,15 +27,15 @@ public class RequestMessageHandler implements MessageHandler<ClientRequestMessag
     public void hand(Channel channel, ClientRequestMessage message) {
         log.info("receive user {} message {} to user {}", message.getFromUserId(), message.getContent(), message.getToUserId());
         MessageOuter.ImMessage imMessage = MessageOuter.ImMessage.newBuilder()
-                .setType(MessageTypeEnum.REQUEST.name())
+                .setType(supportType())
                 .setPayload(JsonUtil.transToString(message))
                 .build();
         nettyChannelHolder.sendToUser(message.getToUserId(), imMessage);
     }
 
     @Override
-    public String supportType() {
-        return MessageTypeEnum.REQUEST.name();
+    public MessageOuter.ImMessage.MessageType supportType() {
+        return MessageOuter.ImMessage.MessageType.REQUEST;
     }
 
     @Override

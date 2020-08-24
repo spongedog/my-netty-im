@@ -47,6 +47,6 @@ public class NettyChannelHolder {
         Optional.ofNullable(userChannelMap.get(userId))
                 .filter(Channel::isActive)
                 .ifPresentOrElse(channel -> channel.writeAndFlush(message),
-                        () -> log.info("com.zkn.client.channel not active"));
+                        () -> log.info("channel not active"));
     }
 }

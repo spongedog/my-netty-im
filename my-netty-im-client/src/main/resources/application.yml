@@ -1,5 +1,5 @@
 netty:
-  serverAddress: 127.0.0.1
+  serverAddress: 172.17.0.2
   serverPort: 8999
 
 server:

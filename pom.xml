@@ -16,6 +16,13 @@
         <maven.compiler.target>14</maven.compiler.target>
         <maven.compiler.source>14</maven.compiler.source>
     </properties>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.3.RELEASE</version>
+    </parent>
+
     <modules>
         <module>my-netty-im-core</module>
         <module>my-netty-im-server</module>
@@ -45,6 +52,5 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
 
 </project>

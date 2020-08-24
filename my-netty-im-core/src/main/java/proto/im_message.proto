@@ -2,6 +2,17 @@ syntax = "proto3";
 option java_package = "com.zkn.core.message";
 option java_outer_classname = "MessageOuter";
 message ImMessage {
-string type = 1;
-string payload = 2;
+  MessageType type = 1;
+
+  string payload = 2;
+
+  enum MessageType {
+      REQUEST = 0;
+
+      RESPONSE = 1;
+
+      HEARTBEAT = 2;
+
+      AUTH = 3;
+  }
 }

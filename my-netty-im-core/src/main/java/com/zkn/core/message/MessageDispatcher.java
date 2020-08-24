@@ -1,6 +1,5 @@
 package com.zkn.core.message;
 
-import com.zkn.core.exception.BaseException;
 import com.zkn.core.util.JsonUtil;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -24,26 +23,23 @@ import java.util.concurrent.ExecutorService;
 @Slf4j
 public class MessageDispatcher extends SimpleChannelInboundHandler<MessageOuter.ImMessage> {
 
-    private final Map<String, MessageHandler> messageHandlerMap;
+    private final Map<MessageOuter.ImMessage.MessageType, MessageHandler> messageHandlerMap;
 
     private final ExecutorService executorService;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MessageOuter.ImMessage msg) throws Exception {
-        MessageHandler<Object> messageHandler = messageHandlerMap.get(msg.getType());
+        Optional.ofNullable(messageHandlerMap.get(msg.getType())).ifPresentOrElse(messageHandler -> {
+            Object payload = JsonUtil.readValue(msg.getPayload(), messageHandler.messageClass());
 
-        if (messageHandler == null) {
-            log.error("not legal type {}", msg.getType());
-        }
+            CompletableFuture.runAsync(() -> messageHandler.hand(ctx.channel(), payload), executorService)
+                    .exceptionallyAsync(e -> {
+                        ctx.fireExceptionCaught(e);
+                        return null;
+                    });
+        }, () -> log.warn("there is no handler for messageType {}", msg.getType()));
 
 
-        Object payload = JsonUtil.readValue(msg.getPayload(), messageHandler.messageClass());
-
-        CompletableFuture.runAsync(() -> messageHandler.hand(ctx.channel(), payload), executorService)
-                .exceptionallyAsync(e -> {
-                    ctx.fireExceptionCaught(e);
-                    return null;
-                });
     }
 
 }

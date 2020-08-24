@@ -1,12 +1,14 @@
 package com.zkn.client.bootstrap;
 
-import ch.qos.logback.core.util.TimeUtil;
 import com.zkn.client.channel.ClientChannelInitializer;
 import com.zkn.client.config.NettyConfig;
 import com.zkn.core.message.MessageDispatcher;
 import com.zkn.core.message.MessageOuter;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**

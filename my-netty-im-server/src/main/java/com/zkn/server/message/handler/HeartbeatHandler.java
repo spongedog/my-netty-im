@@ -1,8 +1,8 @@
 package com.zkn.server.message.handler;
 
-import com.zkn.core.enums.MessageTypeEnum;
 import com.zkn.core.message.HeartbeatMessage;
 import com.zkn.core.message.MessageHandler;
+import com.zkn.core.message.MessageOuter;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,8 +23,8 @@ public class HeartbeatHandler implements MessageHandler<HeartbeatMessage> {
     }
 
     @Override
-    public String supportType() {
-        return MessageTypeEnum.HEARTBEAT.name();
+    public MessageOuter.ImMessage.MessageType supportType() {
+        return MessageOuter.ImMessage.MessageType.HEARTBEAT;
     }
 
     @Override

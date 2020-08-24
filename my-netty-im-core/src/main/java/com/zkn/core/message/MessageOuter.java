@@ -19,16 +19,15 @@ public final class MessageOuter {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string type = 1;</code>
+     * <code>.ImMessage.MessageType type = 1;</code>
+     * @return The enum numeric value on the wire for type.
+     */
+    int getTypeValue();
+    /**
+     * <code>.ImMessage.MessageType type = 1;</code>
      * @return The type.
      */
-    java.lang.String getType();
-    /**
-     * <code>string type = 1;</code>
-     * @return The bytes for type.
-     */
-    com.google.protobuf.ByteString
-        getTypeBytes();
+    com.zkn.core.message.MessageOuter.ImMessage.MessageType getType();
 
     /**
      * <code>string payload = 2;</code>
@@ -55,7 +54,7 @@ public final class MessageOuter {
       super(builder);
     }
     private ImMessage() {
-      type_ = "";
+      type_ = 0;
       payload_ = "";
     }
 
@@ -89,10 +88,10 @@ public final class MessageOuter {
             case 0:
               done = true;
               break;
-            case 10: {
-              java.lang.String s = input.readStringRequireUtf8();
+            case 8: {
+              int rawValue = input.readEnum();
 
-              type_ = s;
+              type_ = rawValue;
               break;
             }
             case 18: {
@@ -133,42 +132,149 @@ public final class MessageOuter {
               com.zkn.core.message.MessageOuter.ImMessage.class, com.zkn.core.message.MessageOuter.ImMessage.Builder.class);
     }
 
-    public static final int TYPE_FIELD_NUMBER = 1;
-    private volatile java.lang.Object type_;
     /**
-     * <code>string type = 1;</code>
-     * @return The type.
+     * Protobuf enum {@code ImMessage.MessageType}
      */
-    @java.lang.Override
-    public java.lang.String getType() {
-      java.lang.Object ref = type_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        type_ = s;
-        return s;
+    public enum MessageType
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>REQUEST = 0;</code>
+       */
+      REQUEST(0),
+      /**
+       * <code>RESPONSE = 1;</code>
+       */
+      RESPONSE(1),
+      /**
+       * <code>HEARTBEAT = 2;</code>
+       */
+      HEARTBEAT(2),
+      /**
+       * <code>AUTH = 3;</code>
+       */
+      AUTH(3),
+      UNRECOGNIZED(-1),
+      ;
+
+      /**
+       * <code>REQUEST = 0;</code>
+       */
+      public static final int REQUEST_VALUE = 0;
+      /**
+       * <code>RESPONSE = 1;</code>
+       */
+      public static final int RESPONSE_VALUE = 1;
+      /**
+       * <code>HEARTBEAT = 2;</code>
+       */
+      public static final int HEARTBEAT_VALUE = 2;
+      /**
+       * <code>AUTH = 3;</code>
+       */
+      public static final int AUTH_VALUE = 3;
+
+
+      public final int getNumber() {
+        if (this == UNRECOGNIZED) {
+          throw new java.lang.IllegalArgumentException(
+              "Can't get the number of an unknown enum value.");
+        }
+        return value;
       }
+
+      /**
+       * @param value The numeric wire value of the corresponding enum entry.
+       * @return The enum associated with the given numeric wire value.
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static MessageType valueOf(int value) {
+        return forNumber(value);
+      }
+
+      /**
+       * @param value The numeric wire value of the corresponding enum entry.
+       * @return The enum associated with the given numeric wire value.
+       */
+      public static MessageType forNumber(int value) {
+        switch (value) {
+          case 0: return REQUEST;
+          case 1: return RESPONSE;
+          case 2: return HEARTBEAT;
+          case 3: return AUTH;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<MessageType>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static final com.google.protobuf.Internal.EnumLiteMap<
+          MessageType> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<MessageType>() {
+              public MessageType findValueByNumber(int number) {
+                return MessageType.forNumber(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        if (this == UNRECOGNIZED) {
+          throw new java.lang.IllegalStateException(
+              "Can't get the descriptor of an unrecognized enum value.");
+        }
+        return getDescriptor().getValues().get(ordinal());
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return com.zkn.core.message.MessageOuter.ImMessage.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final MessageType[] VALUES = values();
+
+      public static MessageType valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        if (desc.getIndex() == -1) {
+          return UNRECOGNIZED;
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int value;
+
+      private MessageType(int value) {
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:ImMessage.MessageType)
+    }
+
+    public static final int TYPE_FIELD_NUMBER = 1;
+    private int type_;
+    /**
+     * <code>.ImMessage.MessageType type = 1;</code>
+     * @return The enum numeric value on the wire for type.
+     */
+    @java.lang.Override public int getTypeValue() {
+      return type_;
     }
     /**
-     * <code>string type = 1;</code>
-     * @return The bytes for type.
+     * <code>.ImMessage.MessageType type = 1;</code>
+     * @return The type.
      */
-    @java.lang.Override
-    public com.google.protobuf.ByteString
-        getTypeBytes() {
-      java.lang.Object ref = type_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        type_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    @java.lang.Override public com.zkn.core.message.MessageOuter.ImMessage.MessageType getType() {
+      @SuppressWarnings("deprecation")
+      com.zkn.core.message.MessageOuter.ImMessage.MessageType result = com.zkn.core.message.MessageOuter.ImMessage.MessageType.valueOf(type_);
+      return result == null ? com.zkn.core.message.MessageOuter.ImMessage.MessageType.UNRECOGNIZED : result;
     }
 
     public static final int PAYLOAD_FIELD_NUMBER = 2;
@@ -223,8 +329,8 @@ public final class MessageOuter {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getTypeBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, type_);
+      if (type_ != com.zkn.core.message.MessageOuter.ImMessage.MessageType.REQUEST.getNumber()) {
+        output.writeEnum(1, type_);
       }
       if (!getPayloadBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, payload_);
@@ -238,8 +344,9 @@ public final class MessageOuter {
       if (size != -1) return size;
 
       size = 0;
-      if (!getTypeBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, type_);
+      if (type_ != com.zkn.core.message.MessageOuter.ImMessage.MessageType.REQUEST.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(1, type_);
       }
       if (!getPayloadBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, payload_);
@@ -259,8 +366,7 @@ public final class MessageOuter {
       }
       com.zkn.core.message.MessageOuter.ImMessage other = (com.zkn.core.message.MessageOuter.ImMessage) obj;
 
-      if (!getType()
-          .equals(other.getType())) return false;
+      if (type_ != other.type_) return false;
       if (!getPayload()
           .equals(other.getPayload())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -275,7 +381,7 @@ public final class MessageOuter {
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + TYPE_FIELD_NUMBER;
-      hash = (53 * hash) + getType().hashCode();
+      hash = (53 * hash) + type_;
       hash = (37 * hash) + PAYLOAD_FIELD_NUMBER;
       hash = (53 * hash) + getPayload().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
@@ -411,7 +517,7 @@ public final class MessageOuter {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        type_ = "";
+        type_ = 0;
 
         payload_ = "";
 
@@ -491,9 +597,8 @@ public final class MessageOuter {
 
       public Builder mergeFrom(com.zkn.core.message.MessageOuter.ImMessage other) {
         if (other == com.zkn.core.message.MessageOuter.ImMessage.getDefaultInstance()) return this;
-        if (!other.getType().isEmpty()) {
-          type_ = other.type_;
-          onChanged();
+        if (other.type_ != 0) {
+          setTypeValue(other.getTypeValue());
         }
         if (!other.getPayload().isEmpty()) {
           payload_ = other.payload_;
@@ -528,78 +633,56 @@ public final class MessageOuter {
         return this;
       }
 
-      private java.lang.Object type_ = "";
+      private int type_ = 0;
       /**
-       * <code>string type = 1;</code>
-       * @return The type.
+       * <code>.ImMessage.MessageType type = 1;</code>
+       * @return The enum numeric value on the wire for type.
        */
-      public java.lang.String getType() {
-        java.lang.Object ref = type_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          type_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
+      @java.lang.Override public int getTypeValue() {
+        return type_;
       }
       /**
-       * <code>string type = 1;</code>
-       * @return The bytes for type.
-       */
-      public com.google.protobuf.ByteString
-          getTypeBytes() {
-        java.lang.Object ref = type_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          type_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>string type = 1;</code>
-       * @param value The type to set.
+       * <code>.ImMessage.MessageType type = 1;</code>
+       * @param value The enum numeric value on the wire for type to set.
        * @return This builder for chaining.
        */
-      public Builder setType(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
+      public Builder setTypeValue(int value) {
+        
         type_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string type = 1;</code>
+       * <code>.ImMessage.MessageType type = 1;</code>
+       * @return The type.
+       */
+      @java.lang.Override
+      public com.zkn.core.message.MessageOuter.ImMessage.MessageType getType() {
+        @SuppressWarnings("deprecation")
+        com.zkn.core.message.MessageOuter.ImMessage.MessageType result = com.zkn.core.message.MessageOuter.ImMessage.MessageType.valueOf(type_);
+        return result == null ? com.zkn.core.message.MessageOuter.ImMessage.MessageType.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>.ImMessage.MessageType type = 1;</code>
+       * @param value The type to set.
+       * @return This builder for chaining.
+       */
+      public Builder setType(com.zkn.core.message.MessageOuter.ImMessage.MessageType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        type_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.ImMessage.MessageType type = 1;</code>
        * @return This builder for chaining.
        */
       public Builder clearType() {
         
-        type_ = getDefaultInstance().getType();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>string type = 1;</code>
-       * @param value The bytes for type to set.
-       * @return This builder for chaining.
-       */
-      public Builder setTypeBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        type_ = value;
+        type_ = 0;
         onChanged();
         return this;
       }
@@ -746,9 +829,12 @@ public final class MessageOuter {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\026proto/im_message.proto\"*\n\tImMessage\022\014\n" +
-      "\004type\030\001 \001(\t\022\017\n\007payload\030\002 \001(\tB$\n\024com.zkn." +
-      "core.messageB\014MessageOuterb\006proto3"
+      "\n\026proto/im_message.proto\"\205\001\n\tImMessage\022$" +
+      "\n\004type\030\001 \001(\0162\026.ImMessage.MessageType\022\017\n\007" +
+      "payload\030\002 \001(\t\"A\n\013MessageType\022\013\n\007REQUEST\020" +
+      "\000\022\014\n\010RESPONSE\020\001\022\r\n\tHEARTBEAT\020\002\022\010\n\004AUTH\020\003" +
+      "B$\n\024com.zkn.core.messageB\014MessageOuterb\006" +
+      "proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

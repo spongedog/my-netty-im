@@ -1,7 +1,6 @@
 package com.zkn.client.channel;
 
 import com.zkn.client.bootstrap.NettyClient;
-import com.zkn.core.enums.MessageTypeEnum;
 import com.zkn.core.message.HeartbeatMessage;
 import com.zkn.core.message.MessageOuter;
 import com.zkn.core.util.JsonUtil;
@@ -41,7 +40,7 @@ public class ChannelStatusHandler extends ChannelInboundHandlerAdapter {
         if (event instanceof IdleStateEvent) {
             log.info("send heart beat");
             MessageOuter.ImMessage imMessage = MessageOuter.ImMessage.newBuilder()
-                    .setType(MessageTypeEnum.HEARTBEAT.name())
+                    .setType(MessageOuter.ImMessage.MessageType.HEARTBEAT)
                     .setPayload(JsonUtil.transToString(new HeartbeatMessage()))
                     .build();
             ctx.channel().writeAndFlush(imMessage).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);

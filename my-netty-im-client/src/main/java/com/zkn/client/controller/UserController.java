@@ -4,7 +4,6 @@ import com.zkn.client.bootstrap.NettyClient;
 import com.zkn.client.cache.UserCache;
 import com.zkn.client.message.ClientAuthMessage;
 import com.zkn.client.message.UserMessage;
-import com.zkn.core.enums.MessageTypeEnum;
 import com.zkn.core.message.MessageOuter;
 import com.zkn.core.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,7 @@ public class UserController {
     public void authentication(@PathVariable String account) {
         MessageOuter.ImMessage imMessage = MessageOuter.ImMessage.newBuilder()
                 .setPayload(JsonUtil.transToString(new ClientAuthMessage(account)))
-                .setType(MessageTypeEnum.AUTH.name())
+                .setType(MessageOuter.ImMessage.MessageType.AUTH)
                 .build();
         nettyClient.send(imMessage);
     }
@@ -42,7 +41,7 @@ public class UserController {
             request.setId(UUID.randomUUID().toString().replace("-", ""));
             MessageOuter.ImMessage imMessage = MessageOuter.ImMessage.newBuilder()
                     .setPayload(JsonUtil.transToString(request))
-                    .setType(MessageTypeEnum.REQUEST.name())
+                    .setType(MessageOuter.ImMessage.MessageType.REQUEST)
                     .build();
             nettyClient.send(imMessage);
         });

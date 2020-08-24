@@ -34,6 +34,7 @@ public class ChannelStatusHandler extends ChannelInboundHandlerAdapter {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             IdleState state = ((IdleStateEvent) evt).state();
+            //读超时，移除对应的channel
             if (IdleState.READER_IDLE == state) {
                 channelHolder.removeChannel(ctx.channel().id());
                 ctx.close();
