@@ -1,10 +1,13 @@
 syntax = "proto3";
 option java_package = "com.zkn.core.message";
 option java_outer_classname = "MessageOuter";
+
+import "google/protobuf/any.proto";
+
 message ImMessage {
   MessageType type = 1;
 
-  string payload = 2;
+  google.protobuf.Any payload = 2;
 
   enum MessageType {
       REQUEST = 0;
@@ -15,4 +18,26 @@ message ImMessage {
 
       AUTH = 3;
   }
+}
+
+message ClientAuthMessage {
+  string account = 1;
+}
+
+message SendToUserMessage {
+    string fromUserId = 1;
+
+    string toUserId = 2;
+
+    string content = 3;
+}
+
+message HeartbeatMessage {
+    string code = 1;
+}
+
+message ServerResponse {
+    string status = 1;
+
+    string userId = 2;
 }

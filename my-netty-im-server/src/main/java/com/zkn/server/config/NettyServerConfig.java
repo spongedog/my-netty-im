@@ -1,5 +1,6 @@
 package com.zkn.server.config;
 
+import com.google.protobuf.Message;
 import com.zkn.core.message.MessageDispatcher;
 import com.zkn.core.message.MessageHandler;
 import com.zkn.core.message.MessageOuter;
@@ -21,12 +22,12 @@ import java.util.stream.Collectors;
 public class NettyServerConfig {
 
     @Resource
-    private List<MessageHandler> messageHandlers;
+    private List<MessageHandler<? extends Message>> messageHandlers;
 
 
     @Bean
     public MessageDispatcher messageDispatcher() {
-        Map<MessageOuter.ImMessage.MessageType, MessageHandler> messageHandlerMap = messageHandlers.stream()
+        Map<MessageOuter.ImMessage.MessageType, MessageHandler<? extends Message>> messageHandlerMap = messageHandlers.stream()
                 .collect(Collectors.toMap(MessageHandler::supportType, x -> x));
         return new MessageDispatcher(messageHandlerMap, Executors.newCachedThreadPool());
     }

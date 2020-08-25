@@ -1,8 +1,6 @@
 package com.zkn.client.message;
 
-import com.zkn.core.message.RequestMessage;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * 来自用户的消息
@@ -10,9 +8,8 @@ import lombok.EqualsAndHashCode;
  * @version 1.0
  * @date 2020/8/18
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class UserMessage extends RequestMessage {
+public class UserMessage {
 
     /**
      * 发送用户id
@@ -23,4 +20,9 @@ public class UserMessage extends RequestMessage {
      * 接收用户id
      */
     private String toUserId;
+
+    /**
+     * 消息内容
+     */
+    private String content;
 }

@@ -1,11 +1,9 @@
 package com.zkn.server.message.handler;
 
+import com.google.protobuf.Any;
 import com.zkn.core.message.MessageHandler;
 import com.zkn.core.message.MessageOuter;
-import com.zkn.core.util.JsonUtil;
 import com.zkn.server.channel.NettyChannelHolder;
-import com.zkn.server.message.ClientAuthMessage;
-import com.zkn.server.message.ServerResponse;
 import com.zkn.server.repository.UserDao;
 import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
@@ -21,19 +19,19 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class AuthMessageHandler implements MessageHandler<ClientAuthMessage> {
+public class AuthMessageHandler implements MessageHandler<MessageOuter.ClientAuthMessage> {
 
     private final NettyChannelHolder nettyChannelHolder;
 
     private final UserDao userDao;
 
     @Override
-    public void hand(Channel channel, ClientAuthMessage message) {
+    public void hand(Channel channel, MessageOuter.ClientAuthMessage message) {
         userDao.findByAccount(message.getAccount())
                 .ifPresentOrElse(user -> {
                     nettyChannelHolder.saveChannel(user.getId(), channel);
                     this.sendResponse("SUCCESS", user.getId(), channel);
-                }, () -> this.sendResponse("FAILURE", null, channel));
+                }, () -> this.sendResponse("FAILURE", "", channel));
     }
 
     @Override
@@ -42,14 +40,19 @@ public class AuthMessageHandler implements MessageHandler<ClientAuthMessage> {
     }
 
     @Override
-    public Class<ClientAuthMessage> messageClass() {
-        return ClientAuthMessage.class;
+    public Class<MessageOuter.ClientAuthMessage> messageClass() {
+        return MessageOuter.ClientAuthMessage.class;
     }
 
     private void sendResponse(String status, String userId, Channel channel) {
+        MessageOuter.ServerResponse serverResponse = MessageOuter.ServerResponse.newBuilder()
+                .setUserId(userId)
+                .setStatus(status)
+                .build();
+
         MessageOuter.ImMessage imMessage = MessageOuter.ImMessage.newBuilder()
                 .setType(MessageOuter.ImMessage.MessageType.RESPONSE)
-                .setPayload(JsonUtil.transToString(new ServerResponse(status, userId)))
+                .setPayload(Any.pack(serverResponse))
                 .build();
         channel.writeAndFlush(imMessage);
     }

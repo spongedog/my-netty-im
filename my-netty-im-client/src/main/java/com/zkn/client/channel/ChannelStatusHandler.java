@@ -1,9 +1,8 @@
 package com.zkn.client.channel;
 
+import com.google.protobuf.Any;
 import com.zkn.client.bootstrap.NettyClient;
-import com.zkn.core.message.HeartbeatMessage;
 import com.zkn.core.message.MessageOuter;
-import com.zkn.core.util.JsonUtil;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -39,9 +38,12 @@ public class ChannelStatusHandler extends ChannelInboundHandlerAdapter {
         //发起心跳
         if (event instanceof IdleStateEvent) {
             log.info("send heart beat");
+            MessageOuter.HeartbeatMessage heartbeatMessage = MessageOuter.HeartbeatMessage.newBuilder()
+                    .setCode("PING")
+                    .build();
             MessageOuter.ImMessage imMessage = MessageOuter.ImMessage.newBuilder()
                     .setType(MessageOuter.ImMessage.MessageType.HEARTBEAT)
-                    .setPayload(JsonUtil.transToString(new HeartbeatMessage()))
+                    .setPayload(Any.pack(heartbeatMessage))
                     .build();
             ctx.channel().writeAndFlush(imMessage).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
         } else {

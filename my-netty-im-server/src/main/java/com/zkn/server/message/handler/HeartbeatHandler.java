@@ -1,6 +1,5 @@
 package com.zkn.server.message.handler;
 
-import com.zkn.core.message.HeartbeatMessage;
 import com.zkn.core.message.MessageHandler;
 import com.zkn.core.message.MessageOuter;
 import io.netty.channel.Channel;
@@ -15,10 +14,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-public class HeartbeatHandler implements MessageHandler<HeartbeatMessage> {
+public class HeartbeatHandler implements MessageHandler<MessageOuter.HeartbeatMessage> {
 
     @Override
-    public void hand(Channel channel, HeartbeatMessage message) {
+    public void hand(Channel channel, MessageOuter.HeartbeatMessage message) {
         log.info("receive heart beat from channel {}", channel.id());
     }
 
@@ -28,7 +27,7 @@ public class HeartbeatHandler implements MessageHandler<HeartbeatMessage> {
     }
 
     @Override
-    public Class<HeartbeatMessage> messageClass() {
-        return HeartbeatMessage.class;
+    public Class<MessageOuter.HeartbeatMessage> messageClass() {
+        return MessageOuter.HeartbeatMessage.class;
     }
 }

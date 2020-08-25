@@ -1,6 +1,5 @@
 package com.zkn.client.message.handler;
 
-import com.zkn.client.message.UserMessage;
 import com.zkn.core.message.MessageHandler;
 import com.zkn.core.message.MessageOuter;
 import io.netty.channel.Channel;
@@ -15,10 +14,10 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Slf4j
-public class UserMessageHandler implements MessageHandler<UserMessage> {
+public class UserMessageHandler implements MessageHandler<MessageOuter.SendToUserMessage> {
 
     @Override
-    public void hand(Channel channel, UserMessage message) {
+    public void hand(Channel channel, MessageOuter.SendToUserMessage message) {
         log.info("receive user {} message {}", message.getFromUserId(), message.getContent());
     }
 
@@ -28,7 +27,7 @@ public class UserMessageHandler implements MessageHandler<UserMessage> {
     }
 
     @Override
-    public Class<UserMessage> messageClass() {
-        return UserMessage.class;
+    public Class<MessageOuter.SendToUserMessage> messageClass() {
+        return MessageOuter.SendToUserMessage.class;
     }
 }

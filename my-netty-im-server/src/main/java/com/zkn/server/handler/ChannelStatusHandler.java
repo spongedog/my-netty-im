@@ -1,6 +1,7 @@
 package com.zkn.server.handler;
 
 import com.zkn.server.channel.NettyChannelHolder;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
+@ChannelHandler.Sharable
 public class ChannelStatusHandler extends ChannelInboundHandlerAdapter {
 
     private final NettyChannelHolder channelHolder;

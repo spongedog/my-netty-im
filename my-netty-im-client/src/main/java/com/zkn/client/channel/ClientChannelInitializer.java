@@ -29,7 +29,17 @@ public class ClientChannelInitializer extends ChannelInitializer<Channel> {
     @Override
     protected void initChannel(Channel ch) throws Exception {
         ChannelPipeline channelPipeline = ch.pipeline();
-        channelPipeline.addLast(new IdleStateHandler(0, 30, 0))
+
+        /*
+         * 1. 监听写超时事件，超时时间设为15s
+         * 2. 处理写超时发起心跳，断线重连等
+         * 2. 解析proto协议消息头中的长度字段
+         * 3. proto解码器
+         * 4. 对proto协议消息头增加一个整形字段用于标识消息长度，用于解决TCP粘包半包问题
+         * 5. proto编码器
+         * 6. 自定义消息分发器
+         */
+        channelPipeline.addLast(new IdleStateHandler(0, 20, 0))
                 .addLast(new ChannelStatusHandler(nettyClient))
                 .addLast(new ProtobufVarint32FrameDecoder())
                 .addLast(new ProtobufDecoder(MessageOuter.ImMessage.getDefaultInstance()))

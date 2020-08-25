@@ -1,5 +1,6 @@
 package com.zkn.core.message;
 
+import com.google.protobuf.Message;
 import io.netty.channel.Channel;
 
 /**
@@ -8,7 +9,7 @@ import io.netty.channel.Channel;
  * @version 1.0
  * @date 2020/8/14
  */
-public interface MessageHandler<T> {
+public interface MessageHandler<T extends Message> {
 
     /**
      * 处理消息

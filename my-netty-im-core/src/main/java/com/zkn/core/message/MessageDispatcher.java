@@ -1,6 +1,8 @@
 package com.zkn.core.message;
 
-import com.zkn.core.util.JsonUtil;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
+import com.zkn.core.exception.BaseException;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -23,23 +25,28 @@ import java.util.concurrent.ExecutorService;
 @Slf4j
 public class MessageDispatcher extends SimpleChannelInboundHandler<MessageOuter.ImMessage> {
 
-    private final Map<MessageOuter.ImMessage.MessageType, MessageHandler> messageHandlerMap;
+    private final Map<MessageOuter.ImMessage.MessageType, MessageHandler<? extends Message>> messageHandlerMap;
 
     private final ExecutorService executorService;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MessageOuter.ImMessage msg) throws Exception {
-        Optional.ofNullable(messageHandlerMap.get(msg.getType())).ifPresentOrElse(messageHandler -> {
-            Object payload = JsonUtil.readValue(msg.getPayload(), messageHandler.messageClass());
+        Optional.ofNullable(messageHandlerMap.get(msg.getType()))
+                .ifPresentOrElse(messageHandler -> doHand(ctx, messageHandler, msg),
+                        () -> log.warn("there is no handler for messageType {}", msg.getType()));
+    }
 
+    private <T extends Message> void doHand(ChannelHandlerContext ctx, MessageHandler<T> messageHandler, MessageOuter.ImMessage msg) {
+        try {
+            T payload = msg.getPayload().unpack(messageHandler.messageClass());
             CompletableFuture.runAsync(() -> messageHandler.hand(ctx.channel(), payload), executorService)
                     .exceptionallyAsync(e -> {
                         ctx.fireExceptionCaught(e);
                         return null;
                     });
-        }, () -> log.warn("there is no handler for messageType {}", msg.getType()));
-
-
+        } catch (InvalidProtocolBufferException e) {
+            throw new BaseException(e);
+        }
     }
 
 }

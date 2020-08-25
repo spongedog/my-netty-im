@@ -1,15 +1,12 @@
 package com.zkn.client.controller;
 
+import com.google.protobuf.Any;
 import com.zkn.client.bootstrap.NettyClient;
 import com.zkn.client.cache.UserCache;
-import com.zkn.client.message.ClientAuthMessage;
 import com.zkn.client.message.UserMessage;
 import com.zkn.core.message.MessageOuter;
-import com.zkn.core.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 /**
  * @author 郑凯努
@@ -27,8 +24,13 @@ public class UserController {
 
     @PostMapping("/authentication/{account}")
     public void authentication(@PathVariable String account) {
+        MessageOuter.ClientAuthMessage clientAuthMessage = MessageOuter.ClientAuthMessage
+                .newBuilder()
+                .setAccount(account)
+                .build();
+
         MessageOuter.ImMessage imMessage = MessageOuter.ImMessage.newBuilder()
-                .setPayload(JsonUtil.transToString(new ClientAuthMessage(account)))
+                .setPayload(Any.pack(clientAuthMessage))
                 .setType(MessageOuter.ImMessage.MessageType.AUTH)
                 .build();
         nettyClient.send(imMessage);
@@ -37,10 +39,15 @@ public class UserController {
     @PostMapping("/send")
     public void send(@RequestBody UserMessage request) {
         userCache.getUserId().ifPresent(userId -> {
-            request.setFromUserId(userId);
-            request.setId(UUID.randomUUID().toString().replace("-", ""));
+            MessageOuter.SendToUserMessage sendToUserMessage = MessageOuter.SendToUserMessage
+                    .newBuilder()
+                    .setFromUserId(userId)
+                    .setToUserId(request.getToUserId())
+                    .setContent(request.getContent())
+                    .build();
+
             MessageOuter.ImMessage imMessage = MessageOuter.ImMessage.newBuilder()
-                    .setPayload(JsonUtil.transToString(request))
+                    .setPayload(Any.pack(sendToUserMessage))
                     .setType(MessageOuter.ImMessage.MessageType.REQUEST)
                     .build();
             nettyClient.send(imMessage);

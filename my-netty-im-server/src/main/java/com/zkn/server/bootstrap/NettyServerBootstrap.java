@@ -2,6 +2,7 @@ package com.zkn.server.bootstrap;
 
 import com.zkn.core.message.MessageDispatcher;
 import com.zkn.server.channel.ServerChannelInitializer;
+import com.zkn.server.handler.ChannelStatusHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
@@ -39,6 +40,8 @@ public class NettyServerBootstrap {
 
     private final MessageDispatcher messageDispatcher;
 
+    private final ChannelStatusHandler channelStatusHandler;
+
     @Value("${netty.server.port}")
     private int port;
 
@@ -48,7 +51,7 @@ public class NettyServerBootstrap {
         bootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
                 .localAddress(new InetSocketAddress(port))
-                .childHandler(new ServerChannelInitializer(messageDispatcher))
+                .childHandler(new ServerChannelInitializer(messageDispatcher, channelStatusHandler))
                 .option(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.SO_KEEPALIVE, false);
         ChannelFuture future = bootstrap.bind().sync();
